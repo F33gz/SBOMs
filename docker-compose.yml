@@ -1,0 +1,41 @@
+services:
+  # Clones repos, generates SBOMs and vulnerability reports
+  processor:
+    build:
+      context: ./processor
+      dockerfile: Dockerfile
+    container_name: sbom-processor
+    environment:
+      - GITHUB_ORG=${GITHUB_ORG}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    volumes:
+      - sbom-data:/data
+    networks:
+      - sbom-network
+
+  # Jupyter Lab for interactive analysis
+  jupyter:
+    image: quay.io/jupyter/scipy-notebook:latest
+    container_name: sbom-jupyter
+    user: root
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_TOKEN=sbom-analysis
+      - GRANT_SUDO=yes
+    volumes:
+      - sbom-data:/data
+      - ./notebooks:/home/jovyan/work
+    networks:
+      - sbom-network
+    depends_on:
+      processor:
+        condition: service_completed_successfully
+
+volumes:
+  sbom-data:
+    driver: local
+
+networks:
+  sbom-network:
+    driver: bridge
