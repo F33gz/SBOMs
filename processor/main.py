@@ -2,26 +2,30 @@
 """
 SBOM Processor - GitHub Organization Scanner
 
-Clones recently active repositories from a GitHub organization,
-generates SBOMs using Syft, and runs vulnerability analysis using Grype.
+Clones the top 5 most popular repositories from a GitHub organization,
+generates SBOMs using Syft, runs vulnerability analysis using Grype,
+analyzes CI/CD workflow configurations, and performs SAST with Semgrep.
 Output JSON files are saved to /data for analysis in Jupyter Lab.
 """
 
+import glob
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import requests
+import yaml
 
 GITHUB_ORG = os.environ.get("GITHUB_ORG", "")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 DATA_DIR = "/data"
-MAX_REPOS = 50
-ACTIVITY_DAYS = 30
+MAX_REPOS = 5
 GITHUB_API_BASE = "https://api.github.com"
 
 
@@ -89,28 +93,24 @@ def fetch_org_repos() -> list[dict]:
     return all_repos
 
 
-def filter_recent_repos(repos: list[dict]) -> list[dict]:
-    """Keep only repos pushed within the last ACTIVITY_DAYS. Returns at most MAX_REPOS."""
-    cutoff_date = datetime.now(timezone.utc) - timedelta(days=ACTIVITY_DAYS)
-    recent = []
-
-    for repo in repos:
-        pushed_at_str = repo.get("pushed_at", "")
-        if not pushed_at_str:
-            continue
-
-        pushed_at = datetime.fromisoformat(pushed_at_str.replace("Z", "+00:00"))
-        if pushed_at >= cutoff_date:
-            recent.append(repo)
-
-    recent.sort(key=lambda r: r.get("pushed_at", ""), reverse=True)
-    filtered = recent[:MAX_REPOS]
-
-    log_info(
-        f"Repos with activity in the last {ACTIVITY_DAYS} days: "
-        f"{len(recent)} (processing top {len(filtered)})"
+def select_top_repos(repos: list[dict]) -> list[dict]:
+    """Select the top MAX_REPOS repositories by star count (popularity)."""
+    # Sort by stars descending
+    sorted_repos = sorted(
+        repos,
+        key=lambda r: r.get("stargazers_count", 0),
+        reverse=True,
     )
-    return filtered
+
+    top = sorted_repos[:MAX_REPOS]
+
+    log_info(f"Selected top {len(top)} repositories by popularity (stars):")
+    for i, repo in enumerate(top, 1):
+        stars = repo.get("stargazers_count", 0)
+        name = repo.get("name", "unknown")
+        log_info(f"  {i}. {name} ({stars:,} stars)")
+
+    return top
 
 
 def clone_repo(repo: dict, target_dir: str) -> bool:
@@ -201,16 +201,217 @@ def run_grype(repo_name: str, sbom_path: str) -> str | None:
         return None
 
 
+def run_semgrep(repo_name: str, repo_dir: str) -> str | None:
+    """Run Semgrep for static analysis (SAST). Returns output path or None."""
+    sast_path = os.path.join(DATA_DIR, f"sast_{repo_name}.json")
+    log_info(f"Running Semgrep on {repo_name}...")
+
+    try:
+        subprocess.run(
+            [
+                "semgrep", "scan",
+                "--config", "auto",
+                "--json",
+                "--output", sast_path,
+                "--quiet",
+                repo_dir,
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=600,
+        )
+        log_success(f"SAST report generated: sast_{repo_name}.json")
+        return sast_path
+    except subprocess.CalledProcessError as e:
+        # Semgrep exits with code 1 when findings are present
+        if os.path.exists(sast_path) and os.path.getsize(sast_path) > 0:
+            log_success(f"SAST report generated (with findings): sast_{repo_name}.json")
+            return sast_path
+        log_error(f"Semgrep failed for {repo_name}: {e.stderr.strip()[:300]}")
+        return None
+    except subprocess.TimeoutExpired:
+        log_error(f"Semgrep timed out for {repo_name} after 600s")
+        return None
+
+
+def analyze_workflows(repo_name: str, repo_dir: str) -> str | None:
+    """Analyze GitHub Actions workflow files for risky configurations.
+    
+    Checks for:
+    - pull_request_target trigger (dangerous)
+    - Excessive permissions (write-all, contents: write, etc.)
+    - Actions not pinned to SHA (uses: action@v1 vs action@sha256)
+    - Script injection via github.event context in run blocks
+    - Use of third-party actions without verification
+    """
+    workflows_dir = os.path.join(repo_dir, ".github", "workflows")
+    results_path = os.path.join(DATA_DIR, f"workflows_{repo_name}.json")
+
+    if not os.path.isdir(workflows_dir):
+        log_info(f"No .github/workflows directory found for {repo_name}")
+        # Save empty result
+        with open(results_path, "w", encoding="utf-8") as f:
+            json.dump({"repository": repo_name, "workflows_found": 0, "findings": []}, f, indent=2)
+        return results_path
+
+    workflow_files = glob.glob(os.path.join(workflows_dir, "*.yml")) + \
+                     glob.glob(os.path.join(workflows_dir, "*.yaml"))
+
+    log_info(f"Analyzing {len(workflow_files)} workflow file(s) for {repo_name}...")
+
+    findings = []
+
+    for wf_path in workflow_files:
+        wf_name = os.path.basename(wf_path)
+        try:
+            with open(wf_path, "r", encoding="utf-8") as f:
+                content = f.read()
+                wf_data = yaml.safe_load(content)
+        except Exception as e:
+            log_warning(f"Failed to parse workflow {wf_name}: {e}")
+            continue
+
+        if not isinstance(wf_data, dict):
+            continue
+
+        # Check 1: pull_request_target trigger
+        triggers = wf_data.get("on", wf_data.get(True, {}))
+        if isinstance(triggers, dict) and "pull_request_target" in triggers:
+            findings.append({
+                "file": wf_name,
+                "risk_type": "dangerous_trigger",
+                "severity": "High",
+                "description": "Uses pull_request_target trigger which can expose secrets to untrusted PRs",
+                "reference": "https://securitylab.github.com/research/github-actions-preventing-pwn-requests/",
+            })
+        elif isinstance(triggers, list) and "pull_request_target" in triggers:
+            findings.append({
+                "file": wf_name,
+                "risk_type": "dangerous_trigger",
+                "severity": "High",
+                "description": "Uses pull_request_target trigger which can expose secrets to untrusted PRs",
+                "reference": "https://securitylab.github.com/research/github-actions-preventing-pwn-requests/",
+            })
+
+        # Check 2: Excessive permissions
+        permissions = wf_data.get("permissions", {})
+        if isinstance(permissions, str) and permissions == "write-all":
+            findings.append({
+                "file": wf_name,
+                "risk_type": "excessive_permissions",
+                "severity": "High",
+                "description": "Workflow uses write-all permissions, violating principle of least privilege",
+            })
+        elif isinstance(permissions, dict):
+            for perm_key, perm_val in permissions.items():
+                if perm_val == "write" and perm_key in ("contents", "packages", "actions"):
+                    findings.append({
+                        "file": wf_name,
+                        "risk_type": "broad_write_permission",
+                        "severity": "Medium",
+                        "description": f"Workflow grants write permission on '{perm_key}'",
+                    })
+
+        # Check 3 & 4: Analyze jobs
+        jobs = wf_data.get("jobs", {})
+        if isinstance(jobs, dict):
+            for job_name, job_data in jobs.items():
+                if not isinstance(job_data, dict):
+                    continue
+
+                # Job-level permissions
+                job_perms = job_data.get("permissions", {})
+                if isinstance(job_perms, str) and job_perms == "write-all":
+                    findings.append({
+                        "file": wf_name,
+                        "risk_type": "excessive_permissions",
+                        "severity": "High",
+                        "description": f"Job '{job_name}' uses write-all permissions",
+                    })
+
+                steps = job_data.get("steps", [])
+                if not isinstance(steps, list):
+                    continue
+
+                for step_idx, step in enumerate(steps):
+                    if not isinstance(step, dict):
+                        continue
+
+                    # Check 3: Actions not pinned to SHA
+                    uses = step.get("uses", "")
+                    if uses and "@" in uses:
+                        ref = uses.split("@")[1]
+                        # Pinned to SHA if ref is 40 hex chars
+                        if not re.match(r"^[a-f0-9]{40}$", ref):
+                            # Check if it's a version tag (common but less secure)
+                            action_name = uses.split("@")[0]
+                            # Skip official actions/ as they're generally trusted
+                            if not action_name.startswith("actions/"):
+                                findings.append({
+                                    "file": wf_name,
+                                    "risk_type": "unpinned_action",
+                                    "severity": "Medium",
+                                    "description": f"Step {step_idx + 1} uses '{uses}' without SHA pinning (supply chain risk)",
+                                })
+
+                    # Check 4: Script injection via github.event context
+                    run_cmd = step.get("run", "")
+                    if run_cmd and "${{" in run_cmd:
+                        # Look for potentially dangerous context references
+                        dangerous_contexts = [
+                            "github.event.issue.title",
+                            "github.event.issue.body",
+                            "github.event.pull_request.title",
+                            "github.event.pull_request.body",
+                            "github.event.comment.body",
+                            "github.event.review.body",
+                            "github.event.head_commit.message",
+                            "github.event.commits",
+                            "github.head_ref",
+                        ]
+                        for ctx in dangerous_contexts:
+                            if ctx in run_cmd:
+                                findings.append({
+                                    "file": wf_name,
+                                    "risk_type": "script_injection",
+                                    "severity": "Critical",
+                                    "description": f"Step {step_idx + 1} uses '{ctx}' in run command — potential command injection",
+                                    "reference": "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#understanding-the-risk-of-script-injections",
+                                })
+
+    result = {
+        "repository": repo_name,
+        "workflows_found": len(workflow_files),
+        "total_findings": len(findings),
+        "findings": findings,
+    }
+
+    with open(results_path, "w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+
+    if findings:
+        log_success(f"Workflow analysis complete: {len(findings)} finding(s) in {repo_name}")
+    else:
+        log_success(f"Workflow analysis complete: no issues found in {repo_name}")
+
+    return results_path
+
+
 def process_repo(repo: dict) -> dict:
-    """Full pipeline for one repo: clone, syft, grype, cleanup."""
+    """Full pipeline for one repo: clone, syft, grype, semgrep, workflow analysis, cleanup."""
     repo_name = repo.get("name", "unknown")
     result = {
         "name": repo_name,
         "full_name": repo.get("full_name", ""),
         "pushed_at": repo.get("pushed_at", ""),
         "language": repo.get("language", ""),
+        "stars": repo.get("stargazers_count", 0),
+        "forks": repo.get("forks_count", 0),
         "sbom_generated": False,
         "vuln_report_generated": False,
+        "sast_generated": False,
+        "workflow_analysis_generated": False,
         "error": None,
     }
 
@@ -221,17 +422,31 @@ def process_repo(repo: dict) -> dict:
             result["error"] = "Clone failed"
             return result
 
+        # 1. SBOM Generation (Syft)
         sbom_path = run_syft(repo_name, tmp_dir)
         if not sbom_path:
             result["error"] = "Syft failed"
             return result
         result["sbom_generated"] = True
 
+        # 2. Vulnerability Scanning (Grype)
         vuln_path = run_grype(repo_name, sbom_path)
         if vuln_path:
             result["vuln_report_generated"] = True
         else:
             result["error"] = "Grype failed"
+
+        # 3. CI/CD Workflow Analysis
+        wf_path = analyze_workflows(repo_name, tmp_dir)
+        if wf_path:
+            result["workflow_analysis_generated"] = True
+
+        # 4. Static Analysis (Semgrep)
+        sast_path = run_semgrep(repo_name, tmp_dir)
+        if sast_path:
+            result["sast_generated"] = True
+        else:
+            log_warning(f"Semgrep analysis skipped or failed for {repo_name}")
 
     except Exception as e:
         result["error"] = str(e)
@@ -253,6 +468,8 @@ def generate_manifest(results: list[dict], start_time: datetime) -> None:
         "total_repos_processed": len(results),
         "successful_sboms": sum(1 for r in results if r["sbom_generated"]),
         "successful_vuln_reports": sum(1 for r in results if r["vuln_report_generated"]),
+        "successful_sast_reports": sum(1 for r in results if r["sast_generated"]),
+        "successful_workflow_analyses": sum(1 for r in results if r["workflow_analysis_generated"]),
         "errors": sum(1 for r in results if r["error"]),
         "repositories": results,
     }
@@ -290,10 +507,10 @@ def main() -> None:
         log_error(f"Network error: {e}")
         sys.exit(1)
 
-    repos = filter_recent_repos(all_repos)
+    repos = select_top_repos(all_repos)
 
     if not repos:
-        log_warning("No repositories found with recent activity. Exiting.")
+        log_warning("No repositories found. Exiting.")
         generate_manifest([], start_time)
         sys.exit(0)
 
@@ -322,11 +539,15 @@ def main() -> None:
     total = len(results)
     sboms = sum(1 for r in results if r["sbom_generated"])
     vulns = sum(1 for r in results if r["vuln_report_generated"])
+    sast = sum(1 for r in results if r["sast_generated"])
+    workflows = sum(1 for r in results if r["workflow_analysis_generated"])
     errors = sum(1 for r in results if r["error"])
 
     print(f"  Total repositories processed:   {total}")
     print(f"  SBOMs generated:                {sboms}")
     print(f"  Vulnerability reports generated: {vulns}")
+    print(f"  SAST reports generated:          {sast}")
+    print(f"  Workflow analyses generated:     {workflows}")
     print(f"  Errors:                          {errors}")
     print()
 
