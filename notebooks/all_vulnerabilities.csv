@@ -1,0 +1,101 @@
+repository,vuln_id,severity,description,data_source,package_name,package_version,package_type
+claude-cookbooks,GHSA-c427-h43c-vf67,Medium,AIOHTTP accepts duplicate Host headers,https://github.com/advisories/GHSA-c427-h43c-vf67,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-6mq8-rvhq-8wgg,High,AIOHTTP's HTTP Parser auto_decompress feature is vulnerable to zip bomb,https://github.com/advisories/GHSA-6mq8-rvhq-8wgg,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-c67j-w6g6-q2cm,Critical,LangChain serialization injection vulnerability enables secret extraction in dumps/loads APIs,https://github.com/advisories/GHSA-c67j-w6g6-q2cm,langchain-core,1.1.0,python
+claude-cookbooks,GHSA-fqwm-6jpj-5wxc,High,Tornado has cookie attribute injection via .RequestHandler.set_cookie,https://github.com/advisories/GHSA-fqwm-6jpj-5wxc,tornado,6.5.2,python
+claude-cookbooks,GHSA-6jhg-hg63-jvvf,Medium,AIOHTTP vulnerable to  denial of service through large payloads,https://github.com/advisories/GHSA-6jhg-hg63-jvvf,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-jj3x-wxrx-4x23,Medium,AIOHTTP vulnerable to DoS when bypassing asserts,https://github.com/advisories/GHSA-jj3x-wxrx-4x23,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-p998-jp59-783m,Medium,AIOHTTP affected by UNC SSRF/NTLMv2 Credential Theft/Local File Read in static resource handler on Windows,https://github.com/advisories/GHSA-p998-jp59-783m,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-m5qp-6w8w-w647,Medium,AIOHTTP has a Multipart Header Size Bypass,https://github.com/advisories/GHSA-m5qp-6w8w-w647,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-w2fm-2cpv-w7v5,Medium,"aiohttp allows unlimited trailer headers, leading to possible uncapped memory usage",https://github.com/advisories/GHSA-w2fm-2cpv-w7v5,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-g84x-mcqj-x9qq,Medium,AIOHTTP vulnerable to DoS through chunked messages,https://github.com/advisories/GHSA-g84x-mcqj-x9qq,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-gm62-xv2j-4w53,High,urllib3 allows an unbounded number of links in the decompression chain,https://github.com/advisories/GHSA-gm62-xv2j-4w53,urllib3,2.5.0,python
+claude-cookbooks,GHSA-926x-3r5x-gfhw,Medium,LangChain has incomplete f-string validation in prompt templates,https://github.com/advisories/GHSA-926x-3r5x-gfhw,langchain-core,1.1.0,python
+claude-cookbooks,GHSA-2xpw-w6gg-jr37,High,urllib3 streaming API improperly handles highly compressed data,https://github.com/advisories/GHSA-2xpw-w6gg-jr37,urllib3,2.5.0,python
+claude-cookbooks,GHSA-63hf-3vf5-4wqf,Low,AIOHTTP's C parser (llhttp) accepts null bytes and control characters in response header values - header injection/security bypass,https://github.com/advisories/GHSA-63hf-3vf5-4wqf,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-qjxf-f2mg-c6mc,High,Tornado is vulnerable to DoS due to too many multipart parts,https://github.com/advisories/GHSA-qjxf-f2mg-c6mc,tornado,6.5.2,python
+claude-cookbooks,GHSA-4c99-qj7h-p3vg,Medium,nbconvert has an Arbitrary File Write via Path Traversal in Cell Attachment Filenames,https://github.com/advisories/GHSA-4c99-qj7h-p3vg,nbconvert,7.16.6,python
+claude-cookbooks,GHSA-38jv-5279-wg99,High,Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API),https://github.com/advisories/GHSA-38jv-5279-wg99,urllib3,2.5.0,python
+claude-cookbooks,GHSA-qh6h-p6c9-ff54,High,LangChain Core has Path Traversal vulnerabilites in legacy `load_prompt` functions,https://github.com/advisories/GHSA-qh6h-p6c9-ff54,langchain-core,1.1.0,python
+claude-cookbooks,GHSA-7jqv-fw35-gmx9,Medium,nbconvert has an Arbitrary File Read via Path Traversal in HTMLExporter Image Embedding,https://github.com/advisories/GHSA-7jqv-fw35-gmx9,nbconvert,7.16.6,python
+claude-cookbooks,GHSA-hx9q-6w63-j58v,High,orjson does not limit recursion for deeply nested JSON documents,https://github.com/advisories/GHSA-hx9q-6w63-j58v,orjson,3.11.4,python
+claude-cookbooks,GHSA-54jq-c3m8-4m76,Low,AIOHTTP vulnerable to brute-force leak of internal static ﬁle path components,https://github.com/advisories/GHSA-54jq-c3m8-4m76,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-cfh3-3jmp-rvhc,High,Pillow affected by out-of-bounds write when loading PSD images,https://github.com/advisories/GHSA-cfh3-3jmp-rvhc,pillow,12.0.0,python
+claude-cookbooks,GHSA-hcc4-c3v8-rx92,Low,AIOHTTP Affected by Denial of Service (DoS) via Unbounded DNS Cache in TCPConnector,https://github.com/advisories/GHSA-hcc4-c3v8-rx92,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-3wq7-rqq7-wx6j,Low,AIOHTTP has late size enforcement for non-file multipart fields causes memory DoS,https://github.com/advisories/GHSA-3wq7-rqq7-wx6j,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-whj4-6x5x-4v2j,High,FITS GZIP decompression bomb in Pillow,https://github.com/advisories/GHSA-whj4-6x5x-4v2j,pillow,12.0.0,python
+claude-cookbooks,GHSA-mqqc-3gqh-h2x8,Low,AIOHTTP has unicode match groups in regexes for ASCII protocol elements,https://github.com/advisories/GHSA-mqqc-3gqh-h2x8,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-xm59-rqc7-hhvf,High,nbconvert has an uncontrolled search path that leads to unauthorized code execution on Windows,https://github.com/advisories/GHSA-xm59-rqc7-hhvf,nbconvert,7.16.6,python
+claude-cookbooks,GHSA-69f9-5gxw-wvc2,Low,AIOHTTP's unicode processing of header values could cause parsing discrepancies,https://github.com/advisories/GHSA-69f9-5gxw-wvc2,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-2vrm-gr82-f7m5,Low,AIOHTTP has CRLF injection through multipart part content type header construction,https://github.com/advisories/GHSA-2vrm-gr82-f7m5,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-mwh4-6h8g-pg8w,Low,AIOHTTP has HTTP response splitting via \r in reason phrase,https://github.com/advisories/GHSA-mwh4-6h8g-pg8w,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-966j-vmvw-g2g9,Low,AIOHTTP leaks Cookie and Proxy-Authorization headers on cross-origin redirect,https://github.com/advisories/GHSA-966j-vmvw-g2g9,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-mf9w-mj56-hr94,Medium,python-dotenv: Symlink following in set_key allows arbitrary file overwrite via cross-device rename fallback,https://github.com/advisories/GHSA-mf9w-mj56-hr94,python-dotenv,1.2.1,python
+claude-cookbooks,GHSA-w828-4qhx-vxx3,Medium,Claude SDK for Python: Memory Tool Path Validation Race Condition Allows Sandbox Escape,https://github.com/advisories/GHSA-w828-4qhx-vxx3,anthropic,0.86.0,python
+claude-cookbooks,GHSA-v34v-rq6j-cj6p,Medium,LangSmith Client SDK Affected by Server-Side Request Forgery via Tracing Header Injection,https://github.com/advisories/GHSA-v34v-rq6j-cj6p,langsmith,0.4.47,python
+claude-cookbooks,GHSA-65rg-554r-9j5x,Medium,lychee link checking action affected by arbitrary code injection in composite action,https://github.com/advisories/GHSA-65rg-554r-9j5x,lycheeverse/lychee-action,v2,github-action
+claude-cookbooks,GHSA-597g-3phw-6986,Medium,virtualenv Has TOCTOU Vulnerabilities in Directory Creation,https://github.com/advisories/GHSA-597g-3phw-6986,virtualenv,20.35.4,python
+claude-cookbooks,GHSA-2g6r-c272-w58r,Low,LangChain affected by SSRF via image_url token counting in ChatOpenAI.get_num_tokens_from_messages,https://github.com/advisories/GHSA-2g6r-c272-w58r,langchain-core,1.1.0,python
+claude-cookbooks,GHSA-fh55-r93g-j68g,Low,AIOHTTP Vulnerable to Cookie Parser Warning Storm,https://github.com/advisories/GHSA-fh55-r93g-j68g,aiohttp,3.13.2,python
+claude-cookbooks,GHSA-q5f5-3gjm-7mfm,Medium,Claude SDK for Python has Insecure Default File Permissions in Local Filesystem Memory Tool,https://github.com/advisories/GHSA-q5f5-3gjm-7mfm,anthropic,0.86.0,python
+claude-cookbooks,GHSA-6w46-j5rx-g56g,Medium,pytest has vulnerable tmpdir handling,https://github.com/advisories/GHSA-6w46-j5rx-g56g,pytest,9.0.1,python
+claude-cookbooks,GHSA-w853-jp5j-5j7f,Medium,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,https://github.com/advisories/GHSA-w853-jp5j-5j7f,filelock,3.20.0,python
+claude-cookbooks,GHSA-qmgc-5h2g-mvrw,Medium,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,https://github.com/advisories/GHSA-qmgc-5h2g-mvrw,filelock,3.20.0,python
+claude-cookbooks,GHSA-5239-wwwm-4pmq,Low,Pygments has Regular Expression Denial of Service (ReDoS) due to Inefficient Regex for GUID Matching,https://github.com/advisories/GHSA-5239-wwwm-4pmq,pygments,2.19.2,python
+claude-cookbooks,GHSA-gc5v-m9x4-r6x2,Medium,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,https://github.com/advisories/GHSA-gc5v-m9x4-r6x2,requests,2.32.5,python
+claude-cookbooks,GHSA-fv5p-p927-qmxr,Medium,LangChain Text Splitters: HTMLHeaderTextSplitter.split_text_from_url SSRF Redirect Bypass,https://github.com/advisories/GHSA-fv5p-p927-qmxr,langchain-text-splitters,1.0.0,python
+claude-cookbooks,GHSA-rr7j-v2q5-chgv,Medium,LangSmith SDK: Streaming token events bypass output redaction,https://github.com/advisories/GHSA-rr7j-v2q5-chgv,langsmith,0.4.47,python
+claude-cookbooks,GHSA-78cv-mqj4-43f7,Medium,Tornado has incomplete validation of cookie attributes,https://github.com/advisories/GHSA-78cv-mqj4-43f7,tornado,6.5.2,python
+claude-cookbooks,GHSA-pjjw-68hj-v9mw,Low,uv vulnerable to arbitrary file deletion through RECORD entries,https://github.com/advisories/GHSA-pjjw-68hj-v9mw,uv,0.9.18,python
+courses,GHSA-qwcr-r2fm-qrc7,High,body-parser vulnerable to denial of service when url encoding is enabled,https://github.com/advisories/GHSA-qwcr-r2fm-qrc7,body-parser,1.20.2,npm
+courses,GHSA-pq67-2wwv-3xjx,High,tar-fs Vulnerable to Link Following and Path Traversal via Extracting a Crafted tar File,https://github.com/advisories/GHSA-pq67-2wwv-3xjx,tar-fs,2.1.1,npm
+courses,GHSA-8cj5-5rvv-wf4v,High,tar-fs can extract outside the specified dir with a specific tarball,https://github.com/advisories/GHSA-8cj5-5rvv-wf4v,tar-fs,2.1.1,npm
+courses,GHSA-fjxv-7rqg-78g4,Critical,form-data uses unsafe random function in form-data for choosing boundary,https://github.com/advisories/GHSA-fjxv-7rqg-78g4,form-data,4.0.0,npm
+courses,GHSA-cm22-4g7w-348p,Low,serve-static vulnerable to template injection that can lead to XSS,https://github.com/advisories/GHSA-cm22-4g7w-348p,serve-static,1.15.0,npm
+courses,GHSA-rhx6-c78j-4q9w,High,path-to-regexp contains a ReDoS,https://github.com/advisories/GHSA-rhx6-c78j-4q9w,path-to-regexp,0.1.7,npm
+courses,GHSA-5rq4-664w-9x2c,Critical,Basic FTP has Path Traversal Vulnerability in its downloadToDir() method,https://github.com/advisories/GHSA-5rq4-664w-9x2c,basic-ftp,5.0.5,npm
+courses,GHSA-pxg6-pf52-xh8x,Low,"cookie accepts cookie name, path, and domain with out of bounds characters",https://github.com/advisories/GHSA-pxg6-pf52-xh8x,cookie,0.4.2,npm
+courses,GHSA-pxg6-pf52-xh8x,Low,"cookie accepts cookie name, path, and domain with out of bounds characters",https://github.com/advisories/GHSA-pxg6-pf52-xh8x,cookie,0.6.0,npm
+courses,GHSA-m6fv-jmcg-4jfg,Low,send vulnerable to template injection that can lead to XSS,https://github.com/advisories/GHSA-m6fv-jmcg-4jfg,send,0.18.0,npm
+courses,GHSA-3xgq-45jj-v275,High,Regular Expression Denial of Service (ReDoS) in cross-spawn,https://github.com/advisories/GHSA-3xgq-45jj-v275,cross-spawn,7.0.3,npm
+courses,GHSA-677m-j7p3-52f9,High,socket.io allows an unbounded number of binary attachments,https://github.com/advisories/GHSA-677m-j7p3-52f9,socket.io-parser,4.2.4,npm
+courses,GHSA-9wv6-86v2-598j,High,path-to-regexp outputs backtracking regular expressions,https://github.com/advisories/GHSA-9wv6-86v2-598j,path-to-regexp,0.1.7,npm
+courses,GHSA-968p-4wvh-cqc8,Medium,Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups,https://github.com/advisories/GHSA-968p-4wvh-cqc8,@babel/runtime,7.25.0,npm
+courses,GHSA-qw6h-vgh9-j6wx,Low,express vulnerable to XSS via response.redirect(),https://github.com/advisories/GHSA-qw6h-vgh9-j6wx,express,4.19.2,npm
+courses,GHSA-r399-636x-v7f6,High,LangChain serialization injection vulnerability enables secret extraction,https://github.com/advisories/GHSA-r399-636x-v7f6,@langchain/core,0.2.24,npm
+courses,GHSA-52f5-9888-hmc6,Low,tmp allows arbitrary temporary file / directory write via symbolic link `dir` parameter,https://github.com/advisories/GHSA-52f5-9888-hmc6,tmp,0.0.33,npm
+courses,GHSA-37ch-88jc-xwx2,High,path-to-regexp vulnerable to Regular Expression Denial of Service via multiple route parameters,https://github.com/advisories/GHSA-37ch-88jc-xwx2,path-to-regexp,0.1.7,npm
+courses,GHSA-6rw7-vpxm-498p,Medium,qs's arrayLimit bypass in its bracket notation allows DoS via memory exhaustion,https://github.com/advisories/GHSA-6rw7-vpxm-498p,qs,6.11.0,npm
+courses,GHSA-fw9q-39r9-c252,Medium,LangSmith Client SDKs has Prototype Pollution in langsmith-sdk via Incomplete `__proto__` Guard in Internal lodash `set()`,https://github.com/advisories/GHSA-fw9q-39r9-c252,langsmith,0.1.41,npm
+courses,GHSA-3v7f-55p6-f55p,Medium,Picomatch: Method Injection in POSIX Character Classes causes incorrect Glob Matching,https://github.com/advisories/GHSA-3v7f-55p6-f55p,picomatch,2.3.1,npm
+courses,GHSA-vj76-c3g6-qr5v,High,tar-fs has a symlink validation bypass if destination directory is predictable with a specific tarball,https://github.com/advisories/GHSA-vj76-c3g6-qr5v,tar-fs,2.1.1,npm
+courses,GHSA-48c2-rrv3-qjmp,Medium,yaml is vulnerable to Stack Overflow via deeply nested YAML collections,https://github.com/advisories/GHSA-48c2-rrv3-qjmp,yaml,2.5.0,npm
+courses,GHSA-v6h2-p8h4-qcjw,Low,brace-expansion Regular Expression Denial of Service vulnerability,https://github.com/advisories/GHSA-v6h2-p8h4-qcjw,brace-expansion,2.0.1,npm
+courses,GHSA-jmr7-xgp7-cmfj,High,fast-xml-parser affected by DoS through entity expansion in DOCTYPE (no expansion limit),https://github.com/advisories/GHSA-jmr7-xgp7-cmfj,fast-xml-parser,4.4.1,npm
+courses,GHSA-7r86-cg39-jmmj,High,minimatch has ReDoS: matchOne() combinatorial backtracking via multiple non-adjacent GLOBSTAR segments,https://github.com/advisories/GHSA-7r86-cg39-jmmj,minimatch,9.0.5,npm
+courses,GHSA-3ppc-4f35-3m26,High,minimatch has a ReDoS via repeated wildcards with non-matching literal in pattern,https://github.com/advisories/GHSA-3ppc-4f35-3m26,minimatch,9.0.5,npm
+courses,GHSA-23c5-xmqv-rm74,High,minimatch ReDoS: nested *() extglobs generate catastrophically backtracking regular expressions,https://github.com/advisories/GHSA-23c5-xmqv-rm74,minimatch,9.0.5,npm
+courses,GHSA-mh29-5h37-fv8m,Medium,js-yaml has prototype pollution in merge (<<),https://github.com/advisories/GHSA-mh29-5h37-fv8m,js-yaml,4.1.0,npm
+courses,GHSA-m7jm-9gc2-mpf2,Critical,fast-xml-parser has an entity encoding bypass via regex injection in DOCTYPE entity names,https://github.com/advisories/GHSA-m7jm-9gc2-mpf2,fast-xml-parser,4.4.1,npm
+courses,GHSA-jp2q-39xq-3w4g,Medium,Entity Expansion Limits Bypassed When Set to Zero Due to JavaScript Falsy Evaluation in fast-xml-parser,https://github.com/advisories/GHSA-jp2q-39xq-3w4g,fast-xml-parser,4.4.1,npm
+courses,GHSA-w7fw-mjwx-w883,Low,qs's arrayLimit bypass in comma parsing allows denial of service,https://github.com/advisories/GHSA-w7fw-mjwx-w883,qs,6.11.0,npm
+courses,GHSA-5j98-mcp5-4vw2,High,glob CLI: Command injection via -c/--cmd executes matches with shell:true,https://github.com/advisories/GHSA-5j98-mcp5-4vw2,glob,10.4.5,npm
+courses,GHSA-fj3w-jwp8-x2g3,Low,fast-xml-parser has stack overflow in XMLBuilder with preserveOrder,https://github.com/advisories/GHSA-fj3w-jwp8-x2g3,fast-xml-parser,4.4.1,npm
+courses,GHSA-8gc5-j5rx-235r,High,fast-xml-parser affected by numeric entity expansion bypassing all entity expansion limits (incomplete fix for CVE-2026-26278),https://github.com/advisories/GHSA-8gc5-j5rx-235r,fast-xml-parser,4.4.1,npm
+courses,GHSA-c2c7-rcm5-vvqj,High,Picomatch has a ReDoS vulnerability via extglob quantifiers,https://github.com/advisories/GHSA-c2c7-rcm5-vvqj,picomatch,2.3.1,npm
+courses,GHSA-f886-m6hf-6m8v,Medium,brace-expansion: Zero-step sequence causes process hang and memory exhaustion,https://github.com/advisories/GHSA-f886-m6hf-6m8v,brace-expansion,2.0.1,npm
+courses,GHSA-gpj5-g38j-94v9,High,Drizzle ORM has SQL injection via improperly escaped SQL identifiers,https://github.com/advisories/GHSA-gpj5-g38j-94v9,drizzle-orm,0.32.2,npm
+courses,GHSA-869p-cjfg-cm3x,High,auth0/node-jws Improperly Verifies HMAC Signature,https://github.com/advisories/GHSA-869p-cjfg-cm3x,jws,3.2.2,npm
+courses,GHSA-869p-cjfg-cm3x,High,auth0/node-jws Improperly Verifies HMAC Signature,https://github.com/advisories/GHSA-869p-cjfg-cm3x,jws,4.0.0,npm
+courses,GHSA-2g4f-4pwh-qvx6,Medium,ajv has ReDoS when using `$data` option,https://github.com/advisories/GHSA-2g4f-4pwh-qvx6,ajv,8.17.1,npm
+courses,GHSA-76c9-3jph-rj3q,Low,on-headers is vulnerable to http response header manipulation,https://github.com/advisories/GHSA-76c9-3jph-rj3q,on-headers,1.0.2,npm
+courses,GHSA-6v7q-wjvx-w8wg,High,basic-ftp: Incomplete CRLF Injection Protection Allows Arbitrary FTP Command Execution via Credentials and MKD Commands,https://github.com/advisories/GHSA-6v7q-wjvx-w8wg,basic-ftp,5.0.5,npm
+courses,GHSA-rp42-5vxx-qpwr,High,basic-ftp vulnerable to denial of service via unbounded memory consumption in Client.list(),https://github.com/advisories/GHSA-rp42-5vxx-qpwr,basic-ftp,5.0.5,npm
+courses,GHSA-747p-wmpv-9c78,Medium,AWS CLI: cli_history database does not restrict file permissions on Unix systems,https://github.com/advisories/GHSA-747p-wmpv-9c78,awscli,1.32.74,python
+courses,GHSA-gh4j-gqv2-49f6,Medium,fast-xml-parser XMLBuilder: XML Comment and CDATA Injection via Unescaped Delimiters,https://github.com/advisories/GHSA-gh4j-gqv2-49f6,fast-xml-parser,4.4.1,npm
+courses,GHSA-rr7j-v2q5-chgv,Medium,LangSmith SDK: Streaming token events bypass output redaction,https://github.com/advisories/GHSA-rr7j-v2q5-chgv,langsmith,0.1.41,npm
+courses,GHSA-w5hq-g745-h8pq,Medium,uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided,https://github.com/advisories/GHSA-w5hq-g745-h8pq,uuid,10.0.0,npm
+courses,GHSA-w5hq-g745-h8pq,Medium,uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided,https://github.com/advisories/GHSA-w5hq-g745-h8pq,uuid,8.3.2,npm
+courses,GHSA-w5hq-g745-h8pq,Medium,uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided,https://github.com/advisories/GHSA-w5hq-g745-h8pq,uuid,9.0.1,npm
+courses,GHSA-6475-r3vj-m8vf,Low,AWS SDK for JavaScript v3 adopted defense in depth enhancement for region parameter value,https://github.com/advisories/GHSA-6475-r3vj-m8vf,@smithy/config-resolver,3.0.5,npm
+prompt-eng-interactive-tutorial,GHSA-747p-wmpv-9c78,Medium,AWS CLI: cli_history database does not restrict file permissions on Unix systems,https://github.com/advisories/GHSA-747p-wmpv-9c78,awscli,1.32.74,python

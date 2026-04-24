@@ -1,0 +1,4 @@
+Repository,Total Vulns,Critical,High,Medium,Low,Unique Packages,Workflow Risks,SAST Findings
+claude-cookbooks,48,1,11,23,13,18,13,26
+courses,51,3,22,15,11,30,0,0
+prompt-eng-interactive-tutorial,1,0,0,1,0,1,0,0
